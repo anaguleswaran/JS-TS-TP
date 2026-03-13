@@ -17,11 +17,26 @@ async function recupererRepas(): Promise<Meal[] | null> {
     return null;
   }
 }
-const user = new User(1, "Bob", 30, []);
+const storage = JSON.parse(localStorage.getItem("user") || "{}");
+const user = new User(
+  storage.id || 1,
+  storage.name || "Bob",
+  storage.wallet || 3000,
+  storage.orders || [],
+);
 const listRepas = document.getElementById("mealList");
 const menuListe = document.getElementById("menuList");
-const storage = JSON.parse(localStorage.getItem("user") || "{}");
+const portefeuille = document.getElementById("portefeuille");
+portefeuille!.textContent = `${user.wallet}`;
 user.orders = storage.orders || [];
+
+const historique = document.getElementById("historique");
+(storage.orders || []).forEach((element: Meal) => {
+  let li = document.createElement("li");
+  li.textContent = `${element.name} - ${element.price}`;
+  historique?.appendChild(li);
+});
+
 let prix = 0;
 
 async function afficherRepas() {
@@ -40,14 +55,12 @@ async function afficherRepas() {
       limenu.textContent = `${element.name} - ${element.price}`;
       menuListe?.appendChild(limenu);
       prix += element.price;
-      user.orders.push(element);
-      localStorage.setItem("user", JSON.stringify(user));
+      user.orderMeal(element);
+      portefeuille!.textContent = `${user.wallet}`;
+      //   user.orders.push(element);
+      //   localStorage.setItem("user", JSON.stringify(user));
     });
     listRepas?.appendChild(button);
   });
 }
 afficherRepas();
-
-const portefeuille = document.getElementById("portefeuille");
-portefeuille!.textContent = `${user.wallet}`;
-

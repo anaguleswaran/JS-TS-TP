@@ -12,21 +12,21 @@ class User {
     this.orders = orders;
   }
 
-  orderMeal(meal: Meal[]) {
-    // return new Promise
-    let price = 0;
-    meal.forEach((element) => {
-      price += element.price;
-    });
-    if (price > this.wallet) {
+  orderMeal(meal: Meal) {
+    // let price = 0;
+    // meal.forEach((element) => {
+    //   price += element.price;
+    // });
+    if (meal.price > this.wallet) {
       throw new TropPauvreErreur(
-        `argent restant ${this.wallet} et total de la commande: ${price}`,
+        `argent restant ${this.wallet} et total de la commande: ${meal.price}`,
       );
-    } else {
-      meal.forEach((element) => {
-        this.wallet -= element.price;
-      });
     }
+    //   meal.forEach((element) => {
+    this.wallet -= meal.price;
+    this.orders.push(meal);
+    //   });
+    localStorage.setItem("user", JSON.stringify(this));
   }
 }
 
