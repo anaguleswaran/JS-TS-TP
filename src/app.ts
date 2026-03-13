@@ -17,6 +17,7 @@ async function recupererRepas(): Promise<Meal[] | null> {
     return null;
   }
 }
+let toutRepas: Meal[];
 const storage = JSON.parse(localStorage.getItem("user") || "{}");
 const user = new User(
   storage.id || 1,
@@ -42,7 +43,7 @@ let prix = 0;
 async function afficherRepas() {
   const meals = await recupererRepas();
   if (!meals) return;
-
+  toutRepas = meals;
   meals.forEach((element) => {
     const li = document.createElement("li");
     li.textContent = `${element.name} - ${element.price}`;
@@ -63,4 +64,21 @@ async function afficherRepas() {
     listRepas?.appendChild(button);
   });
 }
+const mealName = document.getElementById("mealName") as HTMLInputElement;
+const mealCalories = document.getElementById(
+  "mealCalories",
+) as HTMLInputElement;
+const mealPrice = document.getElementById("mealPrice") as HTMLInputElement;
+
+const buttonadd = document.getElementById("addMealBtn");
+
+type MealDraft = Partial<Meal>;
+
+const ajoutRepas: MealDraft = {
+  name: mealName.value,
+  calories: Number(mealCalories.value),
+  price: Number(mealPrice.value),
+};
+
+buttonadd?.addEventListener("click", () => {});
 afficherRepas();
